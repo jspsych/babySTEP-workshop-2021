@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="jspsych-6.2/jspsych.js"></script>
+    <script src="jspsych-6.2/plugins/jspsych-audio-keyboard-response.js"></script>
+    <script src="jspsych-6.2/plugins/jspsych-html-button-response.js"></script>
+    <script src="jspsych-6.2/plugins/jspsych-survey-text.js"></script>
+    <link rel="stylesheet" href="jspsych-6.2/css/jspsych.css">
+  </head>
+  <body></body>
+  <script>
+    // creates an empty array that will hold a set of trials
+    var timeline = [];
+
+    var instructions = {
+      type: 'html-button-response',
+      stimulus: "<p>You'll hear a spoken phrase. Your task is to identify the word(s) you hear.</p>",
+      choices: ["I'm ready"]
+    }
+
+    timeline.push(instructions);
+
+    var play_sound = {
+      type: 'audio-keyboard-response',
+      stimulus: 'mp3/brainstorm-or-green-needle.mp3',
+      choices: jsPsych.NO_KEYS,
+      trial_ends_after_audio: true,
+      prompt: '<p style="font-size:40px;">🔊</p>',
+    }
+
+    timeline.push(play_sound);
+
+    var get_response = {
+      type: 'survey-text',
+      questions: [
+        {prompt: 'What word(s) did you hear?'}
+      ]
+    }
+
+    timeline.push(get_response);
+
+    jsPsych.init({
+      timeline: timeline,
+      on_finish: function(){
+        jsPsych.data.displayData();
+      }
+    });
+
+    
+  </script>
+</html>

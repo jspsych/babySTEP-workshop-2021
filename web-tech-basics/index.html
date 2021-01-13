@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      img { width: 200px; }
+
+      p { color: orange; font-size:22px; font-weight: bold; }
+    </style>
+  </head>
+  <body>
+    <p>This could be the start of something.</p>
+    <img src="jspsych-logo.jpg">
+  </body>
+  <script>
+    document.querySelector('img').addEventListener('click', function(){
+      document.querySelector('img').style.visibility = 'hidden';
+    })
+  </script>
+</html>
