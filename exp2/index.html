@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="jspsych-6.2/jspsych.js"></script>
+    <script src="jspsych-6.2/plugins/jspsych-audio-keyboard-response.js"></script>
+    <script src="jspsych-6.2/plugins/jspsych-image-keyboard-response.js"></script>
+    <script src="jspsych-6.2/plugins/jspsych-html-keyboard-response.js"></script>
+    <link rel="stylesheet" href="jspsych-6.2/css/jspsych.css">
+  </head>
+  <body></body>
+  <script>
+    var timeline = [];
+
+    var instructions = {
+      type: 'html-keyboard-response',
+      stimulus: `<p>In this task, you'll hear a sound and then see a picture. Your job is to determine if the sound matches the picture.</p>
+        <p>If they match, press M. If they do not match, press N.</p>
+        <p>Press M or N to start.</p>`,
+      choices: ['m','n']
+    }
+
+    var audio_cue = {
+      type: 'audio-keyboard-response',
+      stimulus: jsPsych.timelineVariable('cue'),
+      trial_ends_after_audio: true,
+      choices: jsPsych.NO_KEYS,
+      post_trial_gap: 500
+    }
+
+    var image_target = {
+      type: 'image-keyboard-response',
+      stimulus: jsPsych.timelineVariable('target'),
+      choices: ['n', 'm'],
+      data: {
+        cue: jsPsych.timelineVariable('cue'),
+        target: jsPsych.timelineVariable('target'),
+        cue_type: jsPsych.timelineVariable('cue_type'),
+        congruent: jsPsych.timelineVariable('congruent')
+      }
+    }
+
+    var test_procedure = {
+      timeline: [audio_cue, image_target],
+      timeline_variables: [
+        {cue: 'mp3/cat_label.mp3', target: 'img/cat.png', cue_type: 'label', congruent: true},
+        {cue: 'mp3/cat_sound.mp3', target: 'img/cat.png', cue_type: 'sound', congruent: true},
+        {cue: 'mp3/dog_label.mp3', target: 'img/dog.png', cue_type: 'label', congruent: true},
+        {cue: 'mp3/dog_sound.mp3', target: 'img/dog.png', cue_type: 'sound', congruent: true},
+        {cue: 'mp3/cat_label.mp3', target: 'img/dog.png', cue_type: 'label', congruent: false},
+        {cue: 'mp3/cat_sound.mp3', target: 'img/dog.png', cue_type: 'sound', congruent: false},
+        {cue: 'mp3/dog_label.mp3', target: 'img/cat.png', cue_type: 'label', congruent: false},
+        {cue: 'mp3/dog_sound.mp3', target: 'img/cat.png', cue_type: 'sound', congruent: false}
+      ],
+      randomize_order: true
+    }
+
+    timeline.push(instructions);
+    timeline.push(test_procedure);
+
+    jsPsych.init({
+      timeline: timeline,
+      preload_audio: ['mp3/cat_label.mp3', 'mp3/cat_sound.mp3', 'mp3/dog_label.mp3', 'mp3/dog_sound.mp3'],
+      preload_images: ['img/dog.png', 'img/cat.png'],
+      on_finish: function(){
+        jsPsych.data.displayData();
+      }
+    });
+  </script>
+</html>
