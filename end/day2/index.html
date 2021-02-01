@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="jspsych-6.2/jspsych.js"></script>
+  <script src="jspsych-6.2/plugins/jspsych-audio-keyboard-response.js"></script>
+  <script src="jspsych-6.2/plugins/jspsych-html-button-response.js"></script>
+  <link rel="stylesheet" href="jspsych-6.2/css/jspsych.css">
+</head>
+<body></body>
+<script>
+
+  var pre_text = {
+    type: 'html-button-response',
+    stimulus: jsPsych.timelineVariable('context_text'),
+    choices: ['Hear the next part']
+  }
+
+  var audio_option_1 = {
+    type: 'audio-keyboard-response',
+    prompt: '<p>🔊 Option 1 🔊</p>',
+    stimulus: jsPsych.timelineVariable('option_1'),
+    choices: jsPsych.NO_KEYS,
+    trial_ends_after_audio: true,
+    post_trial_gap: 1000
+  }
+
+  var audio_option_2 = {
+    type: 'audio-keyboard-response',
+    prompt: '<p>🔊 Option 2 🔊</p>',
+    stimulus: jsPsych.timelineVariable('option_2'),
+    choices: jsPsych.NO_KEYS,
+    trial_ends_after_audio: true,
+    post_trial_gap: 500
+  }
+
+  var make_choice = {
+    type: 'html-button-response',
+    stimulus: '<p>Which was the funnier ending?</p>',
+    choices: ['Option 1', 'Option 2'],
+    post_trial_gap: 1000
+  }
+
+  var procedure = {
+    timeline: [pre_text, audio_option_1, audio_option_2, make_choice],
+    timeline_variables: [
+      {context_text: `Mountains aren't just funny...`, option_1: 'mp3/mountain_opt_1.mp3', option_2: 'mp3/mountain_opt_2.mp3' },
+      {context_text: `I used to have a fear of hurdles...`, option_1: 'mp3/hurdles_opt_1.mp3', option_2: 'mp3/hurdles_opt_2.mp3' },
+      {context_text: `My friend keeps saying "Cheer up, it could be worse. You could be stuck in an underground hole full of water."`, option_1: 'mp3/hole_opt_1.mp3', option_2: 'mp3/hole_opt_2.mp3' },
+      {context_text: `Why don't aliens visit our solar system?`, option_1: 'mp3/space_opt_1.mp3', option_2: 'mp3/space_opt_2.mp3' }
+    ],
+    sample: {
+      type: 'custom',
+      fn: function(){
+        var order = jsPsych.randomization.shuffle([0,1])
+          .concat(jsPsych.randomization.shuffle([2,3]))
+        return order;
+      }
+    }
+  }
+
+  jsPsych.init({
+    timeline: [procedure],
+    preload_audio: [
+      'mp3/mountain_opt_1.mp3', 'mp3/mountain_opt_2.mp3',
+      'mp3/hurdles_opt_1.mp3', 'mp3/hurdles_opt_2.mp3',
+      'mp3/hole_opt_1.mp3', 'mp3/hole_opt_2.mp3',
+      'mp3/space_opt_1.mp3', 'mp3/space_opt_2.mp3'
+    ]
+  })
+</script>
+</html>
